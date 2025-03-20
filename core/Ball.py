@@ -17,7 +17,7 @@ class Ball:
 
         if not (self.radius < self.y < height - self.radius):
             self.y, mplier = roundnearest(self.y, self.radius, height - self.radius)
-            self.forces.append([resolve_forces(self.forces)[1], 90])
+            self.forces.append([-1 * resolve_forces(self.forces)[1], 90])
             self.dy = abs(self.dy) * mplier * bounciness
             self.dx *= bounciness
 
@@ -26,8 +26,6 @@ class Ball:
             self.forces.append([resolve_forces(self.forces)[0], 180])
             self.dx = abs(self.dx) * mplier * bounciness
             self.dy *= bounciness
-
-        print(resolve_forces(self.forces))
 
         for i in balls:
             if collide_check(self, i):

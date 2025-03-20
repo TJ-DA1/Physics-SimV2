@@ -1,4 +1,6 @@
 import math, random
+from operator import truediv
+
 from common import *
 
 def create_ball(obj, num):
@@ -21,7 +23,7 @@ def resolve_forces(component):
 def roundnearest(val, x, y):
     distlist = [abs(val - x), abs(val - y)]
     lowest = distlist.index(min(distlist))
-    return [x,y][lowest], [1,-1][lowest]
+    return [x,y][lowest] + [1,-1][lowest], [1,-1][lowest]
 
 def collide_check(b1,b2):
     if b1 == b2:
@@ -59,3 +61,4 @@ def collision_handle(b1, b2):
     b1.dy = (b1norm * math.sin(collangle)) + (b1tan * math.cos(collangle))
     b2.dx = (b2norm * math.cos(collangle)) - (b2tan * math.sin(collangle))
     b2.dy = (b2norm * math.sin(collangle)) + (b2tan * math.cos(collangle))
+

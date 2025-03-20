@@ -10,7 +10,7 @@ screen = pygame.display.set_mode(wsize, flags=pygame.SCALED, vsync=1)
 
 # Gravity
 gmag = 1
-degrees = 180
+degrees = 0
 spinvel = 0
 
 # Colours
@@ -21,5 +21,5 @@ bgcol = (0,0,0)
 rad = 6
 pad = 0
 padtoggle = True
-bounciness = 0.8
-bcount = 1
+bounciness = 0.6
+bcount = 100
