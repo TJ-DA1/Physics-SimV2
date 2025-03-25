@@ -2,42 +2,37 @@ from common import *
 from .definitions import *
 
 class Ball:
-    def __init__(self, radius=5, padding=0, x=width / 2, y=height / 2, dx=3, dy=0, ax = 0, ay = 0, forces = []):
+    def __init__(self, radius=5, padding=0, x=width / 2, y=height / 2, dx=3, dy=0, ax = 0, ay = 0, forces = [], listcoll = []):
         self.x, self.y = x, y
         self.dx, self.dy = dx, dy
         self.ax, self.ay = ax,ay
         self.padding = padding
         self.radius = radius
         self.forces = forces
+        self.listcoll = listcoll
 
-    def movecalc(self, balls):
-        for i in balls:
-            if collide_check(self, i):
-                collision_handle(self, i)
+    def movecalc(self):
+        self.ax = resolve_forces(self.forces)[0]
+        self.ay = resolve_forces(self.forces)[1]
 
+        self.dx += self.ax
+        self.dy += self.ay
+
+        self.x += self.dx
+        self.y += self.dy
+
+    def boundarycheck(self):
         if not (self.radius < self.y < height - self.radius):
-            self.y, mplier = roundnearest(self.y, self.radius, height - self.radius)
-            self.forces.append([-1 * resolve_forces(self.forces)[1], 90])
-            self.dy = abs(self.dy) * mplier * bounciness
-            self.dx *= bounciness
+            self.y, mplier = round_nearest(self.y, self.radius, height - self.radius)
+            self.forces.append([mplier * abs(resolve_forces(self.forces)[1]), 90])
+            self.dy = abs(self.dy) * mplier * restitution
+            self.dx *= restitution
 
         if not (self.radius < self.x < width - self.radius):
-            self.x, mplier = roundnearest(self.x, self.radius, width - self.radius)
-            self.forces.append([resolve_forces(self.forces)[0], 180])
-            self.dx = abs(self.dx) * mplier * bounciness
-            self.dy *= bounciness
-
-        for i in balls:
-            if collide_check(self, i):
-                collision_handle(self, i)
-
-        self.dx += round(self.ax, 2)
-        self.dy += round(self.ay, 2)
-
-        self.x += round(self.dx, 2)
-        self.y += round(self.dy, 2)
-
-
+            self.x, mplier = round_nearest(self.x, self.radius, width - self.radius)
+            self.forces.append([mplier * abs(resolve_forces(self.forces)[0]), 0])
+            self.dx = abs(self.dx) * mplier * restitution
+            self.dy *= restitution
 
     def drawball(self):
-        pygame.draw.circle(screen, col, (round(self.x, 2), round(self.y, 2)), self.radius + self.padding)
+        pygame.draw.circle(screen, col, (self.x, self.y), self.radius + self.padding)
