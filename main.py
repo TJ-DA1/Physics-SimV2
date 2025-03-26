@@ -1,20 +1,24 @@
 from core import *
 import time
+
 pygame.init()
 
 time1 = time.time()
 
-running = True
 balls = create_ball(Ball, bcount)
-degrees1 = degrees
+degrees = deg
 
 for i in balls:
-    setup_balls(balls, i)
+    i.listcoll = setup_balls(balls, i)
+
+c1 = 0
+c2 = 1
+up = True
 
 def fixedupdate():
-    global degrees1
-    degrees1 += 0
-    screen.fill((0,0,0))
+    global degrees, c1, c2, up
+    degrees += spinvel
+    screen.fill((0, 0, 0))
     keys = pygame.key.get_pressed()
 
     for event in pygame.event.get():
@@ -22,28 +26,41 @@ def fixedupdate():
             pygame.quit()
             raise SystemExit
 
+    gflip = -1 if keys[pygame.K_SPACE] else 1
+
     for i in balls:
-        print(i.listcoll)
         for j in i.listcoll:
-            print(i,j)
             if collide_check(i, j):
                 collision_handle(i, j)
 
-    for i in balls:
-        i.forces = [[gmag, degrees1]]
+        i.forces = [[gmag * gflip, degrees]]
         i.movecalc()
         i.boundarycheck()
 
-    for i in balls:
         for j in i.listcoll:
             if collide_check(i, j):
                 collision_handle(i, j)
 
-    for i in balls:
         i.drawball()
 
     screen.blit(screen, (0, 0))
     pygame.display.flip()
+
+    if up:
+        col[c2] += 2
+        if col[c2] >= 255:
+            col[c2] = 255
+            up = not up
+    else:
+        col[c1] -= 2
+        if col[c1] <= 0:
+            col[c1] = 0
+            up = not up
+            c1 += 1 if c1 != 2 else -2
+            c2 += 1 if c2 != 2 else -2
+
+    print(col)
+
 
 while True:
     dtime = time.time()

@@ -25,13 +25,13 @@ class Ball:
         if not (self.radius < self.y < height - self.radius):
             self.y, mplier = round_nearest(self.y, self.radius, height - self.radius)
             self.forces.append([mplier * abs(resolve_forces(self.forces)[1]), 90])
-            self.dy = abs(self.dy) * mplier * restitution
+            self.dy = abs(self.dy) * mplier * restitution * 0.5
             self.dx *= restitution
 
         if not (self.radius < self.x < width - self.radius):
             self.x, mplier = round_nearest(self.x, self.radius, width - self.radius)
             self.forces.append([mplier * abs(resolve_forces(self.forces)[0]), 0])
-            self.dx = abs(self.dx) * mplier * restitution
+            self.dx = abs(self.dx) * mplier * restitution * 0.5
             self.dy *= restitution
 
     def drawball(self):

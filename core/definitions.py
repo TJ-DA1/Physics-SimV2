@@ -1,12 +1,10 @@
 import math, random
-from operator import truediv
-
 from common import *
 
 def create_ball(obj, num):
     return [obj(
-        dx=random.uniform(-0.5, 0.5),
-        dy=random.uniform(-0.5, 0.5),
+        dx=random.uniform(-5, 0.5),
+        dy=random.uniform(-0.5, 5),
         x=random.randint(0, width),
         y=random.randint(0, height),
         radius=rad,
@@ -20,11 +18,10 @@ def resolve_forces(component):
         aytemp += i[0] * math.sin(math.radians(i[1]))
     return round(axtemp, 2), round(aytemp,2)
 
-def setup_balls(blist, ball):
-    listtemp = blist
-    listtemp.remove(ball)
-    ball.listcoll = listtemp
-    print(ball.listcoll)
+def setup_balls(blist, ball_):
+    listtemp = list(blist)
+    listtemp.remove(ball_)
+    return listtemp
 
 def round_nearest(val, x, y):
     distlist = [abs(val - x), abs(val - y)]
