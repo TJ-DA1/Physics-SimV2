@@ -1,3 +1,5 @@
+import random
+
 from common import *
 from .definitions import *
 
@@ -10,6 +12,11 @@ class Ball:
         self.radius = radius
         self.forces = forces
         self.listcoll = listcoll
+
+        self.col = [random.randint(0,255), random.randint(0,255), random.randint(0,255)]
+        self.up = random.choice([True,False])
+        self.c1 = random.randint(0,2)
+        self.c2 = (self.c1 + 1) if self.c1 != 2 else 0
 
     def movecalc(self):
         self.ax = resolve_forces(self.forces)[0]
@@ -35,4 +42,17 @@ class Ball:
             self.dy *= restitution
 
     def drawball(self):
-        pygame.draw.circle(screen, col, (self.x, self.y), self.radius + self.padding)
+        if self.up:
+            self.col[self.c2] += 20
+            if self.col[self.c2] >= 255:
+                self.col[self.c2] = 255
+                self.up = not self.up
+        else:
+            self.col[self.c1] -= 20
+            if self.col[self.c1] <= 0:
+                self.col[self.c1] = 0
+                self.up = not self.up
+                self.c1 += 1 if self.c1 != 2 else -2
+                self.c2 += 1 if self.c2 != 2 else -2
+
+        pygame.draw.circle(screen, self.col, (self.x, self.y), self.radius + self.padding)

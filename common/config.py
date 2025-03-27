@@ -14,7 +14,7 @@ deg = 90
 spinvel = 0
 
 # Colours
-col = [255,0,0]
+#col = [255,255,255]
 bgcol = [0,0,0]
 
 # Balls

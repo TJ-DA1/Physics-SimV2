@@ -11,14 +11,10 @@ degrees = deg
 for i in balls:
     i.listcoll = setup_balls(balls, i)
 
-c1 = 0
-c2 = 1
-up = True
-
-def fixedupdate():
-    global degrees, c1, c2, up
+def  fixedupdate():
+    global degrees
     degrees += spinvel
-    screen.fill((0, 0, 0))
+    screen.fill((bgcol))
     keys = pygame.key.get_pressed()
 
     for event in pygame.event.get():
@@ -45,22 +41,6 @@ def fixedupdate():
 
     screen.blit(screen, (0, 0))
     pygame.display.flip()
-
-    if up:
-        col[c2] += 2
-        if col[c2] >= 255:
-            col[c2] = 255
-            up = not up
-    else:
-        col[c1] -= 2
-        if col[c1] <= 0:
-            col[c1] = 0
-            up = not up
-            c1 += 1 if c1 != 2 else -2
-            c2 += 1 if c2 != 2 else -2
-
-    print(col)
-
 
 while True:
     dtime = time.time()
