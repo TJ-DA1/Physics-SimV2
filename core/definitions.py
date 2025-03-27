@@ -1,6 +1,4 @@
 import math, random
-from operator import truediv
-
 from common import *
 
 def create_ball(obj, num):

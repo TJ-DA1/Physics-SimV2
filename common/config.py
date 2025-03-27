@@ -1,7 +1,7 @@
 import pygame
 
 # Render window
-wsize = width, height = 250,250
+wsize = width, height = 500, 500
 scalesize = 30, 30
 windowpad = 0
 framerate = 60
@@ -9,17 +9,17 @@ screentoggle = False
 screen = pygame.display.set_mode(wsize, flags=pygame.SCALED, vsync=1)
 
 # Gravity
-gmag = 1
-degrees = 90
+gmag = 2
+deg = 90
 spinvel = 0
 
 # Colours
-col = (255,255,255)
-bgcol = (0,0,0)
+col = [255,255,255]
+bgcol = [0,0,0]
 
 # Balls
-rad = 6
+rad = 12
 pad = 0
 padtoggle = True
-restitution = 0.8
+restitution = 0.9
 bcount = 100
