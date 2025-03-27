@@ -20,7 +20,12 @@ def resolve_forces(component):
         aytemp += i[0] * math.sin(math.radians(i[1]))
     return round(axtemp, 2), round(aytemp,2)
 
-def roundnearest(val, x, y):
+def setup_balls(blist, ball):
+    listtemp = list(blist)
+    listtemp.remove(ball)
+    ball.listcoll = listtemp
+
+def round_nearest(val, x, y):
     distlist = [abs(val - x), abs(val - y)]
     lowest = distlist.index(min(distlist))
     return [x,y][lowest] + [1,-1][lowest], [1,-1][lowest]
@@ -55,7 +60,7 @@ def collision_handle(b1, b2):
     b2norm = (b2.dx * math.cos(collangle)) + (b2.dy * math.sin(collangle))
     b2tan = (-1 * b2.dx * math.sin(collangle)) + (b2.dy * math.cos(collangle))
 
-    b1norm, b2norm = bounciness * b2norm, bounciness * b1norm
+    b1norm, b2norm = restitution * b2norm, restitution * b1norm
 
     b1.dx = (b1norm * math.cos(collangle)) - (b1tan * math.sin(collangle))
     b1.dy = (b1norm * math.sin(collangle)) + (b1tan * math.cos(collangle))

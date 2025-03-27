@@ -8,9 +8,12 @@ running = True
 balls = create_ball(Ball, bcount)
 degrees1 = degrees
 
+for i in balls:
+    setup_balls(balls, i)
+
 def fixedupdate():
     global degrees1
-    degrees1 += 1
+    degrees1 += 0
     screen.fill((0,0,0))
     keys = pygame.key.get_pressed()
 
@@ -20,12 +23,21 @@ def fixedupdate():
             raise SystemExit
 
     for i in balls:
+        for j in i.listcoll:
+            if collide_check(i, j):
+                collision_handle(i, j)
+
+    for i in balls:
         i.forces = [[gmag, degrees1]]
-        i.movecalc(balls)
-        i.ax = resolve_forces(i.forces)[0]
-        i.ay = resolve_forces(i.forces)[1]
+        i.movecalc()
+        i.boundarycheck()
 
+    for i in balls:
+        for j in i.listcoll:
+            if collide_check(i, j):
+                collision_handle(i, j)
 
+    for i in balls:
         i.drawball()
 
     screen.blit(screen, (0, 0))
