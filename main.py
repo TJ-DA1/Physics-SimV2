@@ -1,5 +1,6 @@
 from core import *
 import time
+
 pygame.init()
 
 time1 = time.time()
@@ -9,7 +10,7 @@ balls = create_ball(Ball, bcount)
 degrees = deg
 
 for i in balls:
-    setup_balls(balls, i)
+    i.listcoll = setup_balls(balls, i)
 
 def fixedupdate():
     global degrees
@@ -22,22 +23,21 @@ def fixedupdate():
             pygame.quit()
             raise SystemExit
 
+    gflip = -1 if keys[pygame.K_SPACE] else 1
+
     for i in balls:
         for j in i.listcoll:
             if collide_check(i, j):
                 collision_handle(i, j)
 
-    for i in balls:
-        i.forces = [[gmag, degrees]]
+        i.forces = [[gmag * gflip, degrees]]
         i.movecalc()
         i.boundarycheck()
 
-    for i in balls:
         for j in i.listcoll:
             if collide_check(i, j):
                 collision_handle(i, j)
 
-    for i in balls:
         i.drawball()
 
     screen.blit(screen, (0, 0))

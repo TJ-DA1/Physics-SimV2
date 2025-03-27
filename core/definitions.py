@@ -21,7 +21,8 @@ def resolve_forces(component):
 def setup_balls(blist, ball):
     listtemp = list(blist)
     listtemp.remove(ball)
-    ball.listcoll = listtemp
+    return listtemp
+
 
 def round_nearest(val, x, y):
     distlist = [abs(val - x), abs(val - y)]
