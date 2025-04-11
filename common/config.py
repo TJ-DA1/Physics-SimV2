@@ -1,12 +1,12 @@
 import pygame
 
 # Render window
-wsize = width, height = 500, 500
+width, height = 500, 500
 scalesize = 30, 30
-windowpad = 0
+windowpad = 100
 framerate = 60
 screentoggle = False
-screen = pygame.display.set_mode(wsize, flags=pygame.SCALED, vsync=1)
+screen = pygame.display.set_mode((width + windowpad, height + windowpad), flags=pygame.SCALED, vsync=1)
 
 # Gravity
 gmag = 2

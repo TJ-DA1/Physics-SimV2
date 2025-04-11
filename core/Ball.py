@@ -35,4 +35,4 @@ class Ball:
             self.dy *= restitution
 
     def drawball(self):
-        pygame.draw.circle(screen, col, (self.x, self.y), self.radius + self.padding)
+        pygame.draw.circle(screen, col, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius + self.padding)

@@ -30,9 +30,7 @@ def round_nearest(val, x, y):
     return [x,y][lowest] + [1,-1][lowest], [1,-1][lowest]
 
 def collide_check(b1,b2):
-    if b1 == b2:
-        return False
-    elif math.dist((b1.x, b1.y), (b2.x, b2.y)) <= b1.radius + b2.radius:
+    if math.dist((b1.x, b1.y), (b2.x, b2.y)) <= b1.radius + b2.radius:
         return True
     else:
         return False
