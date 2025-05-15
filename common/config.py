@@ -21,10 +21,11 @@ col = [0,0,0]
 bgcol = [255,255,255]
 
 # Balls
-rad = 24
+rad = 30
 pad = 0
+linewidth = 3
 padtoggle = True
 passes = 6
-restitution = 0.9
+restitution = 0.8
 friction = 0.8
 bcount = 100

@@ -1,6 +1,18 @@
 import math, random
 from common import *
 
+def boundary_difference(ball, vert, neg):
+    if vert:
+        if neg:
+            return (ball.radius - ball.y) / (ball.prevy - ball.y)
+        else:
+            return (ball.y - (pheight - ball.radius))  / (ball.y - ball.prevy)
+    else:
+        if neg:
+            return (ball.radius - ball.x) / (ball.prevx - ball.x)
+        else:
+            return  (ball.x - (pwidth - ball.radius))  / (ball.x - ball.prevx)
+
 def create_ball(obj, num):
     return [obj(
         dx=random.uniform(-10, 10),
@@ -25,12 +37,6 @@ def setup_balls(blist, ball):
     listtemp.remove(ball)
     listtemp2.remove(ball)
     return listtemp, listtemp2
-
-
-def round_nearest(val, x, y):
-    distlist = [abs(val - x), abs(val - y)]
-    lowest = distlist.index(min(distlist))
-    return [x,y][lowest] + [1,-1][lowest], [1,-1][lowest]
 
 def collide_check(b1,b2):
     if math.dist((b1.x, b1.y), (b2.x, b2.y)) <= b1.radius + b2.radius:

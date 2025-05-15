@@ -2,43 +2,69 @@ from common import *
 from .definitions import *
 
 class Ball:
-    def __init__(self, radius=5, padding=0, x=pwidth / 2, y=pheight / 2, dx=3, dy=0, prevdx = 0, prevdy = 0, ax = 0, ay = 0, forces = [], listcoll = [], listcoll2 = []):
+    def __init__(self, radius=5, padding=0, x=pwidth / 2, y=pheight / 2, dx=3, dy=0, ax = 0, ay = 0):
         self.x, self.y = x, y
+        self.prevx, self.prevy = x, y
         self.dx, self.dy = dx, dy
-        self.prevdx, self.prevdy = prevdx, prevdy
         self.ax, self.ay = ax,ay
         self.padding = padding
         self.radius = radius
-        self.forces = forces
-        self.listcoll = listcoll
-        self.listcoll2 = listcoll2
+        self.forces = []
+        self.listcoll = []
+        self.listcoll2 = []
+        self.multix, self.multiy = 1,1
 
     def movecalc(self):
-        self.x += round(self.dx) / 2
-        self.y += round(self.dy) / 2
-        self.ax, self.ay = resolve_forces(self.forces)[0] / 2, resolve_forces(self.forces)[1] / 2
-        self.prevdx = self.dx
-        self.prevdy = self.dy
-        self.dx += self.ax / 2
-        self.dy += self.ay / 2
+        self.x += self.dx / 2
+        self.y += self.dy / 2
 
-    def boundarycheck(self):
+        self.multiy = self.boundarychecky()
+        self.multix = self.boundarycheckx()
+        self.ax, self.ay = resolve_forces(self.forces)[0], resolve_forces(self.forces)[1]
+        self.prevx, self.prevy = self.x, self.y
+
+        self.multix = 1 if self.multix > 1 else self.multix
+        self.multiy = 1 if self.multiy > 1 else self.multiy
+
+        self.dx += (self.ax / 2) * self.multix
+        self.dy += (self.ay / 2) * self.multiy
+
+    def boundarychecky(self):
         if not (self.radius <= self.y <= pheight - self.radius):
-            self.y, mplier = round_nearest(self.y, self.radius, pheight - self.radius)
-            #self.forces.append([mplier * abs(resolve_forces(self.forces)[1]), 90])
-            print(self.dy)
-            self.dy = math.floor(math.sqrt((self.prevdy)**2 * friction) * mplier)
-            print(self.dy)
-            self.dx *= friction
+            if self.radius >= self.y:
+                mpliery = boundary_difference(self, True, True)
+                self.y = self.radius
+                self.dy = abs(self.dy) * friction
 
+            if pheight - self.radius <= self.y:
+                mpliery = boundary_difference(self, True, False)
+                self.y = pheight - self.radius
+                self.dy = abs(self.dy) * friction * -1
+
+            self.dx *= friction
+            return mpliery
+
+        else:
+            return 1
+
+    def boundarycheckx(self):
         if not (self.radius <= self.x <= pwidth - self.radius):
-            self.x, mplier = round_nearest(self.x, self.radius, pwidth - self.radius)
-            #self.forces.append([mplier * abs(resolve_forces(self.forces)[0]), 0])
-            print(self.dx)
-            self.dx = math.floor(math.sqrt((self.prevdx**2) * friction) * mplier)
-            print(self.dx)
+            if self.radius >= self.x:
+                mplierx = boundary_difference(self, False, True)
+                self.x = self.radius
+                self.dx = abs(self.dx) * friction
+
+            if pwidth - self.radius <= self.x:
+                mplierx = boundary_difference(self, False, False)
+                self.x = pwidth - self.radius
+                self.dx = abs(self.dx) * friction * -1
+
             self.dy *= friction
+            return mplierx
+
+        else:
+            return 1
 
     def drawball(self):
         pygame.draw.circle(psurface, col, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius + self.padding)
-        pygame.draw.circle(psurface, col2, (self.x + (windowpad / 2), self.y + (windowpad / 2)),self.radius - 5+ self.padding)
+        pygame.draw.circle(psurface, col2, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius - linewidth + self.padding)
