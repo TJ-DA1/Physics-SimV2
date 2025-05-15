@@ -2,24 +2,29 @@ import pygame
 
 # Render window
 width, height = 500, 500
-scalesize = 30, 30
-windowpad = 100
+pwidth, pheight = 1000,1000
+scalesize = 500,500
+windowpad = 0
 framerate = 60
 screentoggle = False
-screen = pygame.display.set_mode((width + windowpad, height + windowpad), flags=pygame.SCALED, vsync=1)
+psurface = pygame.Surface((pwidth + windowpad, pheight + windowpad))
+screen = pygame.display.set_mode((width, height), flags=pygame.SCALED, vsync=1)
 
 # Gravity
-gmag = 2
+gmag = 6
 deg = 90
 spinvel = 0
 
 # Colours
-col = [255,255,255]
-bgcol = [0,0,0]
+col = [0,0,0]
+col2 = [255,255,255]
+bgcol = [255,255,255]
 
 # Balls
-rad = 12
+rad = 40
 pad = 0
 padtoggle = True
-restitution = 0.9
-bcount = 100
+passes = 6
+restitution = 0.8
+friction = 0.6
+bcount = 20
