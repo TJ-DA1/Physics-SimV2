@@ -1,4 +1,4 @@
-from core import *
+from core  import *
 import time
 
 pygame.init()
@@ -11,11 +11,9 @@ for i in balls:
 
 running = True
 
-
 def fixedupdate():
     global degrees
     degrees += spinvel
-    screen.fill(bgcol)
     psurface.fill(bgcol)
     keys = pygame.key.get_pressed()
 
@@ -26,8 +24,7 @@ def fixedupdate():
 
     gflip = -1 if keys[pygame.K_SPACE] else 1
 
-    for i in balls:
-        i.forces = [[gmag * gflip, degrees]]
+    Ball.forces = [[gmag * gflip, degrees]]
 
     for _ in range(int(passes / 2)):
         for i in range(len(balls)):
@@ -38,17 +35,11 @@ def fixedupdate():
     for i in balls:
         i.movecalc()
 
-    #for i in balls:
-        #i.boundarycheck()
-
     for _ in range(int(passes / 2)):
         for i in range(len(balls)):
             for j in range(i + 1, len(balls)):
                 if collide_check(balls[i], balls[j]):
                     collision_handle(balls[i], balls[j])
-
-    #for i in balls:
-        #i.boundarycheck()
 
     for i in balls:
         i.movecalc()

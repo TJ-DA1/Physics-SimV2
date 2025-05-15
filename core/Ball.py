@@ -2,6 +2,7 @@ from common import *
 from .definitions import *
 
 class Ball:
+    forces = []
     def __init__(self, radius=5, padding=0, x=pwidth / 2, y=pheight / 2, dx=3, dy=0, ax = 0, ay = 0):
         self.x, self.y = x, y
         self.prevx, self.prevy = x, y
@@ -9,7 +10,6 @@ class Ball:
         self.ax, self.ay = ax,ay
         self.padding = padding
         self.radius = radius
-        self.forces = []
         self.listcoll = []
         self.listcoll2 = []
         self.multix, self.multiy = 1,1
@@ -17,17 +17,15 @@ class Ball:
     def movecalc(self):
         self.x += self.dx / 2
         self.y += self.dy / 2
-
         self.multiy = self.boundarychecky()
         self.multix = self.boundarycheckx()
-        self.ax, self.ay = resolve_forces(self.forces)[0], resolve_forces(self.forces)[1]
+
+        self.ax, self.ay = resolve_forces(self.forces)
+
+        self.dx += (self.ax / 2) * (self.multix if self.multix <= 1 else 1)
+        self.dy += (self.ay / 2) * (self.multiy if self.multiy <= 1 else 1)
+
         self.prevx, self.prevy = self.x, self.y
-
-        self.multix = 1 if self.multix > 1 else self.multix
-        self.multiy = 1 if self.multiy > 1 else self.multiy
-
-        self.dx += (self.ax / 2) * self.multix
-        self.dy += (self.ay / 2) * self.multiy
 
     def boundarychecky(self):
         if not (self.radius <= self.y <= pheight - self.radius):
@@ -36,7 +34,7 @@ class Ball:
                 self.y = self.radius
                 self.dy = abs(self.dy) * friction
 
-            if pheight - self.radius <= self.y:
+            else:
                 mpliery = boundary_difference(self, True, False)
                 self.y = pheight - self.radius
                 self.dy = abs(self.dy) * friction * -1
@@ -54,7 +52,7 @@ class Ball:
                 self.x = self.radius
                 self.dx = abs(self.dx) * friction
 
-            if pwidth - self.radius <= self.x:
+            else:
                 mplierx = boundary_difference(self, False, False)
                 self.x = pwidth - self.radius
                 self.dx = abs(self.dx) * friction * -1
@@ -67,4 +65,4 @@ class Ball:
 
     def drawball(self):
         pygame.draw.circle(psurface, col, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius + self.padding)
-        pygame.draw.circle(psurface, col2, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius - linewidth + self.padding)
+        pygame.draw.circle(psurface, col2, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius - math.ceil(self.radius / 5) + self.padding)

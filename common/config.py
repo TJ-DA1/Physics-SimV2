@@ -7,25 +7,24 @@ scalesize = 500,500
 windowpad = 0
 framerate = 60
 screentoggle = False
-psurface = pygame.Surface((pwidth + (windowpad), pheight + (windowpad)))
+psurface = pygame.Surface((pwidth + windowpad, pheight + windowpad))
 screen = pygame.display.set_mode((width, height), flags=pygame.SCALED, vsync=1)
 
 # Gravity
-gmag = 8
+gmag = 6
 deg = 90
 spinvel = 0
 
 # Colours
-col2 = [255,255,255]
 col = [0,0,0]
+col2 = [255,255,255]
 bgcol = [255,255,255]
 
 # Balls
-rad = 30
+rad = 40
 pad = 0
-linewidth = 3
 padtoggle = True
 passes = 6
 restitution = 0.8
-friction = 0.8
-bcount = 100
+friction = 0.6
+bcount = 20

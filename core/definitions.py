@@ -53,8 +53,8 @@ def collision_handle(b1, b2):
         diffx = diffy = distance = 0.1
 
     nx, ny = diffx / distance, diffy / distance
-    slop = 0.01
-    correction = max(overlap - slop, 0) / 2
+    minoverlap = 1
+    correction = max(overlap - minoverlap, 0) / 2
 
     b1.x -= (correction * nx)
     b1.y -= (correction * ny)
@@ -67,7 +67,6 @@ def collision_handle(b1, b2):
     b2norm = (b2.dx * math.cos(collangle)) + (b2.dy * math.sin(collangle))
     b2tan = (-1 * b2.dx * math.sin(collangle)) + (b2.dy * math.cos(collangle))
 
-    #b1norm, b2norm = restitution * b2norm, restitution * b1norm
     b1normtemp = (((restitution - 1) * (b1norm)) + (((-1 * restitution) - 1) * (b2norm))) / -2
     b2normtemp = (((restitution + 1) * (b1norm)) + (((-1 * restitution) + 1) * (b2norm))) / 2
     b1norm, b2norm = b1normtemp, b2normtemp
