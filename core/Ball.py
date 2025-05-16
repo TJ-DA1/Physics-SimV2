@@ -1,8 +1,9 @@
-from common import *
 from .definitions import *
 
 class Ball:
     forces = []
+    rest = restitution
+    fric = friction
     def __init__(self, radius=5, padding=0, x=pwidth / 2, y=pheight / 2, dx=3, dy=0, ax = 0, ay = 0):
         self.x, self.y = x, y
         self.prevx, self.prevy = x, y
@@ -10,8 +11,6 @@ class Ball:
         self.ax, self.ay = ax,ay
         self.padding = padding
         self.radius = radius
-        self.listcoll = []
-        self.listcoll2 = []
         self.multix, self.multiy = 1,1
 
     def movecalc(self):
@@ -32,14 +31,14 @@ class Ball:
             if self.radius >= self.y:
                 mpliery = boundary_difference(self, True, True)
                 self.y = self.radius
-                self.dy = abs(self.dy) * friction
+                self.dy = abs(self.dy) * self.fric
 
             else:
                 mpliery = boundary_difference(self, True, False)
                 self.y = pheight - self.radius
-                self.dy = abs(self.dy) * friction * -1
+                self.dy = abs(self.dy) * self.fric * -1
 
-            self.dx *= friction
+            self.dx *= self.fric
             return mpliery
 
         else:
@@ -50,14 +49,14 @@ class Ball:
             if self.radius >= self.x:
                 mplierx = boundary_difference(self, False, True)
                 self.x = self.radius
-                self.dx = abs(self.dx) * friction
+                self.dx = abs(self.dx) * self.fric
 
             else:
                 mplierx = boundary_difference(self, False, False)
                 self.x = pwidth - self.radius
-                self.dx = abs(self.dx) * friction * -1
+                self.dx = abs(self.dx) * self.fric * -1
 
-            self.dy *= friction
+            self.dy *= self.fric
             return mplierx
 
         else:
