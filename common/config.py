@@ -1,4 +1,4 @@
-import pygame
+import pygame, pygame_gui
 
 # Render window
 width, height = 500, 500
@@ -9,6 +9,7 @@ framerate = 60
 screentoggle = False
 psurface = pygame.Surface((pwidth + windowpad, pheight + windowpad))
 screen = pygame.display.set_mode((width, height), flags=pygame.SCALED, vsync=1)
+manager = pygame_gui.UIManager((500,500), "common/theme.json")
 
 # Gravity
 gmag = 6
@@ -27,4 +28,4 @@ padtoggle = True
 passes = 6
 restitution = 0.8
 friction = 0.6
-bcount = 20
+bcount = 50

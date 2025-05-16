@@ -1,0 +1,32 @@
+{
+    "horizontal_slider":
+    {
+        "misc":
+        {
+            "enable_arrow_buttons": "0",
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "7"
+        }
+    },
+    "horizontal_slider.#sliding_button":
+     {
+         "misc":
+         {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "7"
+         }
+     },
+    "label":
+    {
+        "colours":
+        {
+            "normal_text": "#fafafa",
+            "text_shadow": "#202020"
+        },
+        "misc":
+         {
+             "text_shadow_offset":"0,0",
+             "text_shadow_size":"1"
+         }
+    }
+}

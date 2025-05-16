@@ -4,14 +4,14 @@ from common import *
 def boundary_difference(ball, vert, neg):
     if vert:
         if neg:
-            return (ball.radius - ball.y) / (ball.prevy - ball.y)
+            return (ball.radius - ball.y) / ((ball.prevy - ball.y) if (ball.prevy - ball.y) > 0 else 0.01)
         else:
-            return (ball.y - (pheight - ball.radius))  / (ball.y - ball.prevy)
+            return (ball.y - (pheight - ball.radius))  / ((ball.y - ball.prevy) if (ball.y - ball.prevy) > 0 else 0.01)
     else:
         if neg:
-            return (ball.radius - ball.x) / (ball.prevx - ball.x)
+            return (ball.radius - ball.x) / ((ball.prevx - ball.x) if (ball.prevx - ball.x) > 0 else 0.01)
         else:
-            return  (ball.x - (pwidth - ball.radius))  / (ball.x - ball.prevx)
+            return  (ball.x - (pwidth - ball.radius))  / ((ball.x - ball.prevx) if (ball.x - ball.prevx) > 0 else 0.01)
 
 def create_ball(obj, num):
     return [obj(
@@ -29,14 +29,6 @@ def resolve_forces(component):
         axtemp += i[0] * math.cos(math.radians(i[1]))
         aytemp += i[0] * math.sin(math.radians(i[1]))
     return round(axtemp, 2), round(aytemp,2)
-
-def setup_balls(blist, ball):
-    listtemp = list(blist)
-    listtemp2 = list(blist)
-    listtemp2.reverse()
-    listtemp.remove(ball)
-    listtemp2.remove(ball)
-    return listtemp, listtemp2
 
 def collide_check(b1,b2):
     if math.dist((b1.x, b1.y), (b2.x, b2.y)) <= b1.radius + b2.radius:
@@ -67,8 +59,8 @@ def collision_handle(b1, b2):
     b2norm = (b2.dx * math.cos(collangle)) + (b2.dy * math.sin(collangle))
     b2tan = (-1 * b2.dx * math.sin(collangle)) + (b2.dy * math.cos(collangle))
 
-    b1normtemp = (((restitution - 1) * (b1norm)) + (((-1 * restitution) - 1) * (b2norm))) / -2
-    b2normtemp = (((restitution + 1) * (b1norm)) + (((-1 * restitution) + 1) * (b2norm))) / 2
+    b1normtemp = (((b1.rest - 1) * (b1norm)) + (((-1 * b1.rest) - 1) * (b2norm))) / -2
+    b2normtemp = (((b1.rest + 1) * (b1norm)) + (((-1 * b1.rest) + 1) * (b2norm))) / 2
     b1norm, b2norm = b1normtemp, b2normtemp
 
     b1.dx = (b1norm * math.cos(collangle)) - (b1tan * math.sin(collangle))
