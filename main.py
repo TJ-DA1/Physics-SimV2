@@ -11,7 +11,7 @@ gmag = config.gmag
 running = True
 
 def fixedupdate():
-    global deg, guitoggle, guiswitch, gmag, friction, restitution
+    global deg, guitoggle, guiswitch, gmag, friction, restitution, balls
     deg += spinvel
     psurface.fill(bgcol)
     keys = pygame.key.get_pressed()
@@ -31,6 +31,16 @@ def fixedupdate():
                 if event.ui_element == fricslider:
                     friction = round(event.value, 0) / 10
                     friclabel.set_text(f"Friction: {friction}")
+                if event.ui_element == ballcount:
+                    if len(balls) < event.value:
+                        balls += create_ball(Ball, event.value - len(balls))
+
+                    elif len(balls) > event.value:
+                        for i in range(len(balls) - event.value):
+                            balls.pop()
+
+                    config.bcount = len(balls)
+                    balllabel.set_text(f"Balls: {config.bcount}")
 
         if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
             pygame.quit()
@@ -50,27 +60,25 @@ def fixedupdate():
     Ball.rest = restitution
     Ball.fric = friction
 
-    for _ in range(int(passes / 2)):
-        for i in range(len(balls)):
-            for j in range(i + 1, len(balls)):
-                if collide_check(balls[i], balls[j]):
-                    collision_handle(balls[i], balls[j])
-        balls.reverse()
-
     for i in balls:
         i.movecalc()
 
-    for _ in range(int(passes / 2)):
+    for _ in range(passes):
+
         for i in range(len(balls)):
             for j in range(i + 1, len(balls)):
-               if collide_check(balls[i], balls[j]):
-                    collision_handle(balls[i], balls[j])
-        balls.reverse()
+                b1, b2 = balls[i], balls[j]
+                if collide_check(b1, b2):
+                    collision_velocity(b1, b2)
+                    collision_overlap(b1, b2)
+
+        for ball in balls:
+            ball.boundarycheckx()
+            ball.boundarychecky()
+
 
     for i in balls:
-        i.movecalc()
-
-    for i in balls:
+        i.movecalc2()
         i.drawball()
 
     manager.update(dtime - etime)

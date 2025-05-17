@@ -11,56 +11,61 @@ class Ball:
         self.ax, self.ay = ax,ay
         self.padding = padding
         self.radius = radius
-        self.multix, self.multiy = 1,1
+        self.yapply, self.xapply = True, True
+        self.multix, self.multiy = 0.5, 0.5
 
     def movecalc(self):
-        self.x += self.dx / 2
-        self.y += self.dy / 2
-        self.multiy = self.boundarychecky()
-        self.multix = self.boundarycheckx()
+        self.prevy, self.prevx = self.y, self.x
+        self.multix, self.multiy = 0.5, 0.5
+        self.yapply, self.xapply = True, True
+        self.x += self.dx
+        self.y += self.dy
 
+    def movecalc2(self):
         self.ax, self.ay = resolve_forces(self.forces)
+        if self.xapply:
+            self.dx += self.ax
+        else:
+            self.dx += self.ax * self.multix
+        if self.yapply:
+            self.dy += self.ay
+        else:
+            self.dy += self.ay * self.multiy
 
-        self.dx += (self.ax / 2) * (self.multix if self.multix <= 1 else 1)
-        self.dy += (self.ay / 2) * (self.multiy if self.multiy <= 1 else 1)
-
-        self.prevx, self.prevy = self.x, self.y
 
     def boundarychecky(self):
         if not (self.radius <= self.y <= pheight - self.radius):
             if self.radius >= self.y:
-                mpliery = boundary_difference(self, True, True)
+                self.clipy = self.y
                 self.y = self.radius
                 self.dy = abs(self.dy) * self.fric
+                self.multiy = boundary_difference(self, True, True)
+                self.yapply = False
 
             else:
-                mpliery = boundary_difference(self, True, False)
+                self.clipy = self.y
                 self.y = pheight - self.radius
                 self.dy = abs(self.dy) * self.fric * -1
-
+                self.multiy = boundary_difference(self, True, False)
+                self.yapply = False
             self.dx *= self.fric
-            return mpliery
-
-        else:
-            return 1
 
     def boundarycheckx(self):
         if not (self.radius <= self.x <= pwidth - self.radius):
             if self.radius >= self.x:
-                mplierx = boundary_difference(self, False, True)
+                self.clipx = self.x
                 self.x = self.radius
                 self.dx = abs(self.dx) * self.fric
+                self.multix = boundary_difference(self, False, True)
+                self.xapply = False
 
             else:
-                mplierx = boundary_difference(self, False, False)
+                self.clipx = self.x
                 self.x = pwidth - self.radius
                 self.dx = abs(self.dx) * self.fric * -1
-
+                self.multix = boundary_difference(self, False, False)
+                self.xapply = False
             self.dy *= self.fric
-            return mplierx
-
-        else:
-            return 1
 
     def drawball(self):
         pygame.draw.circle(psurface, col, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius + self.padding)

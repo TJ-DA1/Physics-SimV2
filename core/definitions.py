@@ -4,14 +4,14 @@ from common import *
 def boundary_difference(ball, vert, neg):
     if vert:
         if neg:
-            return (ball.radius - ball.y) / ((ball.prevy - ball.y) if (ball.prevy - ball.y) > 0 else 0.01)
+            return (ball.radius - ball.clipy) / ((ball.prevy - ball.clipy) if (ball.prevy - ball.clipy) != 0 else 0.1)
         else:
-            return (ball.y - (pheight - ball.radius))  / ((ball.y - ball.prevy) if (ball.y - ball.prevy) > 0 else 0.01)
+            return (ball.clipy - (pheight - ball.radius))  / ((ball.clipy - ball.prevy) if (ball.clipy - ball.prevy) != 0 else 0.1)
     else:
         if neg:
-            return (ball.radius - ball.x) / ((ball.prevx - ball.x) if (ball.prevx - ball.x) > 0 else 0.01)
+            return (ball.radius - ball.clipx) / ((ball.prevx - ball.clipx) if (ball.prevx - ball.clipx) != 0 else 0.1)
         else:
-            return  (ball.x - (pwidth - ball.radius))  / ((ball.x - ball.prevx) if (ball.x - ball.prevx) > 0 else 0.01)
+            return (ball.clipx - (pwidth - ball.radius))  / ((ball.clipx - ball.prevx) if (ball.clipx - ball.prevx) != 0 else 0.1)
 
 def create_ball(obj, num):
     return [obj(
@@ -32,11 +32,11 @@ def resolve_forces(component):
 
 def collide_check(b1,b2):
     if math.dist((b1.x, b1.y), (b2.x, b2.y)) <= b1.radius + b2.radius:
-        return True
+        return True if b1 != b2 else False
     else:
         return False
 
-def collision_handle(b1, b2):
+def collision_overlap(b1, b2):
     diffx, diffy = b2.x - b1.x, b2.y - b1.y
     distance = math.dist((b1.x, b1.y), (b2.x, b2.y))
     overlap = b1.radius + b2.radius - distance
@@ -53,6 +53,8 @@ def collision_handle(b1, b2):
     b2.x += (correction * nx)
     b2.y += (correction * ny)
 
+def collision_velocity(b1, b2):
+    diffx, diffy = b2.x - b1.x, b2.y - b1.y
     collangle = math.atan2(diffy, diffx)
     b1norm = (b1.dx * math.cos(collangle)) + (b1.dy * math.sin(collangle))
     b1tan = (-1 * b1.dx * math.sin(collangle)) + (b1.dy * math.cos(collangle))

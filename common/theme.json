@@ -5,7 +5,7 @@
         {
             "enable_arrow_buttons": "0",
             "shape": "rounded_rectangle",
-            "shape_corner_radius": "7"
+            "shape_corner_radius": "6"
         }
     },
     "horizontal_slider.#sliding_button":
@@ -13,7 +13,7 @@
          "misc":
          {
             "shape": "rounded_rectangle",
-            "shape_corner_radius": "7"
+            "shape_corner_radius": "6"
          }
      },
     "label":
