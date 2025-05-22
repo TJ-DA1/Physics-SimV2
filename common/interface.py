@@ -14,3 +14,8 @@ fricslider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((0
 
 balllabel = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((width - 200, 0), (200, 20)), text=f"Balls: {bcount}", manager=manager)
 ballcount = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((width - 200, 20), (200, 20)), start_value=bcount, value_range=(1, 200), manager=manager)
+
+radlabel = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((width - 200, 40), (200, 20)), text=f"Radius: {rad}", manager=manager)
+radslider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((width - 200, 60), (200, 20)), start_value=rad, value_range=(1, 50), manager=manager)
+
+framelabel = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((width - 50, height-20), (50, 20)), text=f"{framerate}fps", manager=manager)

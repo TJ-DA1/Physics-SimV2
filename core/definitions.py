@@ -13,13 +13,13 @@ def boundary_difference(ball, vert, neg):
         else:
             return (ball.clipx - (pwidth - ball.radius))  / ((ball.clipx - ball.prevx) if (ball.clipx - ball.prevx) != 0 else 0.1)
 
-def create_ball(obj, num):
+def create_ball(obj, num, radius):
     return [obj(
         dx=random.uniform(-10, 10),
         dy=random.uniform(-10, 10),
         x=random.randint(0, pwidth),
         y=random.randint(0, pheight),
-        radius=rad,
+        radius=radius,
         padding = pad
     ) for _ in range(num)]
 
@@ -42,11 +42,12 @@ def collision_overlap(b1, b2):
     overlap = b1.radius + b2.radius - distance
 
     if distance == 0:
-        diffx = diffy = distance = 0.1
+        diffx =  0.1 if b2.prevx >= b1.prevx else -0.1
+        diffy =  0.1 if b2.prevy >= b1.prevy else -0.1
+        distance = 0.1
 
     nx, ny = diffx / distance, diffy / distance
-    minoverlap = 1
-    correction = max(overlap - minoverlap, 0) / 2
+    correction = overlap /  2
 
     b1.x -= (correction * nx)
     b1.y -= (correction * ny)

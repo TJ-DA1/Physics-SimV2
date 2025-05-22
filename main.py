@@ -2,16 +2,15 @@ from core import *
 import time
 
 etime = time.time()
-balls = create_ball(Ball, bcount)
+balls = create_ball(Ball, bcount, rad)
 guitoggle = True
 guiswitch = True
-deg = config.deg
-gmag = config.gmag
+frames = [framerate for i in range(5)]
 
 running = True
 
 def fixedupdate():
-    global deg, guitoggle, guiswitch, gmag, friction, restitution, balls
+    global guitoggle, guiswitch, gmag, deg, friction, restitution, balls
     deg += spinvel
     psurface.fill(bgcol)
     keys = pygame.key.get_pressed()
@@ -22,18 +21,22 @@ def fixedupdate():
                 if event.ui_element == gslider:
                     gmag = event.value
                     glabel.set_text(f"Gravity magnitude: {gmag}")
-                if event.ui_element == degslider:
+                elif event.ui_element == degslider:
                     deg = event.value + 90
                     deglabel.set_text(f"Gravity angle: {deg - 90}")
-                if event.ui_element == restslider:
+                elif event.ui_element == restslider:
                     restitution = round(event.value, 0) / 10
                     restlabel.set_text(f"Restitution: {restitution}")
-                if event.ui_element == fricslider:
+                elif event.ui_element == fricslider:
                     friction = round(event.value, 0) / 10
                     friclabel.set_text(f"Friction: {friction}")
-                if event.ui_element == ballcount:
+                elif event.ui_element == radslider:
+                    for i in balls:
+                        i.radius = event.value
+                    radlabel.set_text(f"Radius: {balls[0].radius}")
+                elif event.ui_element == ballcount:
                     if len(balls) < event.value:
-                        balls += create_ball(Ball, event.value - len(balls))
+                        balls += create_ball(Ball, event.value - len(balls), balls[0].radius)
 
                     elif len(balls) > event.value:
                         for i in range(len(balls) - event.value):
@@ -89,10 +92,11 @@ def fixedupdate():
     if guitoggle:
         manager.draw_ui(screen)
     pygame.display.flip()
-
-
 while running:
     dtime = time.time()
     if dtime - etime >= 1 / framerate:
+        frames.append(1 / (dtime - etime))
+        frames.pop(0)
         fixedupdate()
+        framelabel.set_text(f"{round(sum(frames) / len(frames))}fps")
         etime += dtime - etime

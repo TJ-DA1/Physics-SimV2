@@ -22,10 +22,10 @@ col2 = [255,255,255]
 bgcol = [255,255,255]
 
 # Balls
-rad = 40
+rad = 30
 pad = 0
 padtoggle = True
 passes = 6
-restitution = 0.8
-friction = 1
+restitution = 0.9
+friction = 0.9
 bcount = 1
