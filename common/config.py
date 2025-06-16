@@ -1,9 +1,9 @@
 import pygame, pygame_gui
 
 # Render window
-width, height = 500, 500
-pwidth, pheight = 1000,1000
-scalesize = 500, 500
+width, height = 500,500
+pwidth, pheight = 500,500
+scalesize = 500,500
 windowpad = 0
 framerate = 60
 screentoggle = False
@@ -24,7 +24,6 @@ bgcol = [255,255,255]
 # Balls
 rad = 30
 pad = 0
-padtoggle = True
 passes = 6
 restitution = 0.9
 friction = 0.9

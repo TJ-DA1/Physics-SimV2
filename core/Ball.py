@@ -67,6 +67,6 @@ class Ball:
                 self.xapply = False
             self.dy *= self.fric
 
-    def drawball(self):
-        pygame.draw.circle(psurface, col, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius + self.padding)
-        pygame.draw.circle(psurface, col2, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius - math.ceil(self.radius / 5) + self.padding)
+    def drawball(self, colour, colour2):
+        pygame.draw.circle(psurface, colour, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius + self.padding)
+        pygame.draw.circle(psurface, colour2, (self.x + (windowpad / 2), self.y + (windowpad / 2)), self.radius - math.ceil(self.radius / 5) + self.padding)

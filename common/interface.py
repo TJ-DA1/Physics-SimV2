@@ -19,3 +19,6 @@ radlabel = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((width - 200, 4
 radslider = pygame_gui.elements.UIHorizontalSlider(relative_rect=pygame.Rect((width - 200, 60), (200, 20)), start_value=rad, value_range=(1, 50), manager=manager)
 
 framelabel = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((width - 50, height-20), (50, 20)), text=f"{framerate}fps", manager=manager)
+
+colourentry = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((0, height - 20), (100, 20)), manager=manager)
+colourselector = pygame_gui.elements.UIDropDownMenu(relative_rect=pygame.Rect((0, height - 45),(100, 25)), options_list = ["Background", "Outline", "Main"], starting_option = "Main", manager = manager)

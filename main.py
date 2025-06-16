@@ -8,15 +8,28 @@ guiswitch = True
 frames = [framerate for i in range(5)]
 
 running = True
+colid = 0
 
 def fixedupdate():
-    global guitoggle, guiswitch, gmag, deg, friction, restitution, balls
+    global guitoggle, guiswitch, gmag, deg, friction, restitution, balls, col, col2, bgcol, colid
     deg += spinvel
     psurface.fill(bgcol)
     keys = pygame.key.get_pressed()
 
     for event in pygame.event.get():
         if guitoggle:
+            if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+                colid = ["Main", "Outline", "Background"].index(event.selected_option_id)
+                print(colid)
+            if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+                print(hexformat(event.text))
+                match colid:
+                    case 0:
+                        col2 = hexformat(event.text)
+                    case 1:
+                        col = hexformat(event.text)
+                    case 2:
+                        bgcol = hexformat(event.text)
             if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                 if event.ui_element == gslider:
                     gmag = event.value
@@ -82,7 +95,7 @@ def fixedupdate():
 
     for i in balls:
         i.movecalc2()
-        i.drawball()
+        i.drawball(col, col2)
 
     manager.update(dtime - etime)
 

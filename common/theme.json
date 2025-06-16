@@ -1,4 +1,23 @@
 {
+  "drop_down_menu": {
+         "misc":
+         {
+           "expand_direction": "up",
+           "shape": "rounded_rectangle",
+           "shape_corner_radius": "6",
+           "open_button_width": "0"
+         }
+
+     },
+    "drop_down_menu.#drop_down_options_list":
+    {
+      "misc":
+      {
+        "shape": "rounded_rectangle",
+        "shape_corner_radius": "6"
+      }
+    },
+
     "horizontal_slider":
     {
         "misc":
@@ -9,7 +28,7 @@
         }
     },
     "horizontal_slider.#sliding_button":
-     {
+    {
          "misc":
          {
             "shape": "rounded_rectangle",

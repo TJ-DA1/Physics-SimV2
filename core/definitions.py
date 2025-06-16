@@ -71,3 +71,21 @@ def collision_velocity(b1, b2):
     b2.dx = (b2norm * math.cos(collangle)) - (b2tan * math.sin(collangle))
     b2.dy = (b2norm * math.sin(collangle)) + (b2tan * math.cos(collangle))
 
+def hexformat(hexstring):
+    validsep = [",", ".", " ", "/"]
+    for i in validsep:
+        if i in hexstring:
+            string2 = hexstring
+            string2 = string2.split(i)
+            if len(string2) == 3:
+                check = 0
+                for i in string2:
+                    try:
+                        i = int(i)
+                        if 0 <= i <= 255:
+                            check += 1
+                    except:
+                        check = -1000000
+                if check == 3:
+                    return list([int(i) for i in string2])            
+    return None
