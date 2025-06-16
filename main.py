@@ -20,14 +20,12 @@ def fixedupdate():
         if guitoggle:
             if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
                 colid = ["Main", "Outline", "Background"].index(event.selected_option_id)
-                print(colid)
             if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
-                print(hexformat(event.text))
                 match colid:
                     case 0:
-                        col2 = hexformat(event.text)
-                    case 1:
                         col = hexformat(event.text)
+                    case 1:
+                        col2 = hexformat(event.text)
                     case 2:
                         bgcol = hexformat(event.text)
             if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
