@@ -1,59 +1,53 @@
 from core import *
-import time
 
-etime = time.time()
-balls = create_ball(Ball, bcount, rad)
-guitoggle = True
-guiswitch = True
-frames = [framerate for i in range(5)]
-
+context = SimulationContext()
+context.balls = create_ball(Ball, bcount, rad)
 running = True
-colid = 0
 
-def fixedupdate():
-    global guitoggle, guiswitch, gmag, deg, friction, restitution, balls, col, col2, bgcol, colid
-    deg += spinvel
-    psurface.fill(bgcol)
+def fixedupdate(ctx):
+    ctx.deg += ctx.spinvel
+    psurface.fill(ctx.bgcol)
+
     keys = pygame.key.get_pressed()
-
-    for event in pygame.event.get():
-        if guitoggle:
+    events = pygame.event.get()
+    for event in events:
+        if ctx.guitoggle:
             if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
-                colid = ["Main", "Outline", "Background"].index(event.selected_option_id)
+                ctx.colid = ["Main", "Outline", "Background"].index(event.selected_option_id)
             if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
-                match colid:
+                match ctx.colid:
                     case 0:
-                        col = hexformat(event.text)
+                        Ball.col = hexformat(event.text)
                     case 1:
-                        col2 = hexformat(event.text)
+                        Ball.col2 = hexformat(event.text)
                     case 2:
-                        bgcol = hexformat(event.text)
+                        ctx.bgcol = hexformat(event.text)
             if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                 if event.ui_element == gslider:
-                    gmag = event.value
-                    glabel.set_text(f"Gravity magnitude: {gmag}")
+                    ctx.gmag = event.value
+                    glabel.set_text(f"Gravity magnitude: {ctx.gmag}")
                 elif event.ui_element == degslider:
-                    deg = event.value + 90
-                    deglabel.set_text(f"Gravity angle: {deg - 90}")
+                    ctx.deg = event.value + 90
+                    deglabel.set_text(f"Gravity angle: {ctx.deg - 90}")
                 elif event.ui_element == restslider:
-                    restitution = round(event.value, 0) / 10
-                    restlabel.set_text(f"Restitution: {restitution}")
+                    Ball.rest = round(event.value, 0) / 10
+                    restlabel.set_text(f"Restitution: {Ball.rest}")
                 elif event.ui_element == fricslider:
-                    friction = round(event.value, 0) / 10
-                    friclabel.set_text(f"Friction: {friction}")
+                    Ball.fric = round(event.value, 0) / 10
+                    friclabel.set_text(f"Friction: {Ball.fric}")
                 elif event.ui_element == radslider:
-                    for i in balls:
+                    for i in ctx.balls:
                         i.radius = event.value
-                    radlabel.set_text(f"Radius: {balls[0].radius}")
+                    radlabel.set_text(f"Radius: {ctx.balls[0].radius}")
                 elif event.ui_element == ballcount:
-                    if len(balls) < event.value:
-                        balls += create_ball(Ball, event.value - len(balls), balls[0].radius)
+                    if len(ctx.balls) < event.value:
+                        ctx.balls += create_ball(Ball, event.value - len(ctx.balls), ctx.balls[0].radius)
 
-                    elif len(balls) > event.value:
-                        for i in range(len(balls) - event.value):
-                            balls.pop()
+                    elif len(ctx.balls) > event.value:
+                        for i in range(len(ctx.balls) - event.value):
+                            ctx.balls.pop()
 
-                    config.bcount = len(balls)
+                    config.bcount = len(ctx.balls)
                     balllabel.set_text(f"Balls: {config.bcount}")
 
         if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
@@ -62,52 +56,48 @@ def fixedupdate():
         manager.process_events(event)
 
     gflip = -1 if keys[pygame.K_SPACE] else 1
+    Ball.forces = [[ctx.gmag * gflip, ctx.deg]]
 
-    if keys[pygame.K_g] and guiswitch:
-        guitoggle = not guitoggle
-        guiswitch = False
-
-    elif not keys[pygame.K_g]:
-        guiswitch = True
-
-    Ball.forces = [[gmag * gflip, deg]]
-    Ball.rest = restitution
-    Ball.fric = friction
-
-    for i in balls:
+    for i in ctx.balls:
         i.movecalc()
 
     for _ in range(passes):
-
-        for i in range(len(balls)):
-            for j in range(i + 1, len(balls)):
-                b1, b2 = balls[i], balls[j]
+        for i in range(len(ctx.balls)):
+            for j in range(i + 1, len(ctx.balls)):
+                b1, b2 = ctx.balls[i], ctx.balls[j]
                 if collide_check(b1, b2):
                     collision_velocity(b1, b2)
                     collision_overlap(b1, b2)
 
-        for ball in balls:
+        for ball in ctx.balls:
             ball.boundarycheckx()
             ball.boundarychecky()
 
-
-    for i in balls:
+    for i in ctx.balls:
         i.movecalc2()
-        i.drawball(col, col2)
+        i.drawball(ball.col, ball.col2)
 
-    manager.update(dtime - etime)
+    if keys[pygame.K_g] and ctx.guiswitch:
+        ctx.guitoggle = not ctx.guitoggle
+        ctx.guiswitch = False
+    elif not keys[pygame.K_g]:
+        ctx.guiswitch = True
 
     small_screen = pygame.transform.scale(psurface, scalesize)
     pixelated_screen = pygame.transform.scale(small_screen, (width, height))
     screen.blit(pixelated_screen, (0, 0))
-    if guitoggle:
+
+    if ctx.guitoggle:
+        manager.update(dtime - ctx.etime)
         manager.draw_ui(screen)
+
     pygame.display.flip()
+
 while running:
     dtime = time.time()
-    if dtime - etime >= 1 / framerate:
-        frames.append(1 / (dtime - etime))
-        frames.pop(0)
-        fixedupdate()
-        framelabel.set_text(f"{round(sum(frames) / len(frames))}fps")
-        etime += dtime - etime
+    if dtime - context.etime >= 1 / framerate:
+        context.frames.append(1 / (dtime - context.etime))
+        context.frames.pop(0)
+        fixedupdate(context)
+        framelabel.set_text(f"{round(sum(context.frames) / len(context.frames))}fps")
+        context.etime += dtime - context.etime

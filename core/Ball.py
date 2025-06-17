@@ -1,9 +1,11 @@
 from .definitions import *
 
 class Ball:
-    forces = []
+    col = col
+    col2 = col2
     rest = restitution
     fric = friction
+    forces = []
     def __init__(self, radius=5, padding=0, x=pwidth / 2, y=pheight / 2, dx=3, dy=0, ax = 0, ay = 0):
         self.x, self.y = x, y
         self.prevx, self.prevy = x, y
