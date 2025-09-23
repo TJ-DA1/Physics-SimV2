@@ -2,9 +2,21 @@ from core import *
 
 context = SimulationContext()
 context.balls = create_ball(Ball, bcount, rad)
+
+'''
+heavy = create_ball(Ball, 1, 30)
+heavy[0].mass = 8
+heavy[0].drawtrail = True
+context.balls.append(heavy[0])
+
+
+#square = Square()
+'''
+
 running = True
 
 def fixedupdate(ctx):
+    global square
     ctx.deg += ctx.spinvel
     psurface.fill(ctx.bgcol)
 
@@ -16,12 +28,9 @@ def fixedupdate(ctx):
                 ctx.colid = ["Main", "Outline", "Background"].index(event.selected_option_id)
             if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
                 match ctx.colid:
-                    case 0:
-                        Ball.col = hexformat(event.text)
-                    case 1:
-                        Ball.col2 = hexformat(event.text)
-                    case 2:
-                        ctx.bgcol = hexformat(event.text)
+                    case 0: Ball.col = hexformat(event.text)
+                    case 1: Ball.col2 = hexformat(event.text)
+                    case 2: ctx.bgcol = hexformat(event.text)
             if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                 if event.ui_element == gslider:
                     ctx.gmag = event.value
@@ -66,7 +75,7 @@ def fixedupdate(ctx):
             for j in range(i + 1, len(ctx.balls)):
                 b1, b2 = ctx.balls[i], ctx.balls[j]
                 if collide_check(b1, b2):
-                    collision_velocity(b1, b2)
+                    edge_collision(b1, b2)
                     collision_overlap(b1, b2)
 
         for ball in ctx.balls:
